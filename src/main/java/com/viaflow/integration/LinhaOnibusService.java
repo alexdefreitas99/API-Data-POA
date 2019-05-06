@@ -17,19 +17,18 @@ import com.google.gson.JsonParser;
 import com.viaflow.document.LinhaOnibus;
 
 @Service
-public class IntegrationService {
+public class LinhaOnibusService {
 
 	public List<LinhaOnibus> findAll() {
 		String UrlTodasAsLinhas = "http://www.poatransporte.com.br/php/facades/process.php?a=nc&p=%&t=o";
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
-
 		JsonArray arrayFromString = new JsonParser()
 				.parse(new RestTemplate().exchange(UrlTodasAsLinhas, HttpMethod.GET, entity, String.class).getBody())
 				.getAsJsonArray();
-
 		List<LinhaOnibus> linhas = new ArrayList<>();
+		
 		Gson gson = new Gson();
 		for (int i = 0; i < arrayFromString.size(); i++) {
 			linhas.add(gson.fromJson(arrayFromString.get(i), LinhaOnibus.class));
