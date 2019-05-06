@@ -10,6 +10,5 @@ public class OnibusApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OnibusApiApplication.class, args);		
-			IntegrationService.getRestTemplate();
 	}
 }
