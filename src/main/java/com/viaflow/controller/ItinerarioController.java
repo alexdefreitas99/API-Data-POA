@@ -26,9 +26,7 @@ public class ItinerarioController {
 			response.getErrors().add("Register not found " + id);
 			return ResponseEntity.badRequest().body(response);
 		}
-
 		response.setData(obj);
 		return ResponseEntity.ok(response);
 	}
-
 }
