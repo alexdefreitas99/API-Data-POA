@@ -1,5 +1,6 @@
 package com.viaflow.document;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
@@ -7,7 +8,12 @@ import lombok.Data;
 @Data
 @Document          
 public class LinhaOnibus {
+	
+	@Id
 	private String id;
+	
+	private String idlinha;
+	
 	private String codigo;
 	private String nome;
 }
