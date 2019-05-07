@@ -21,7 +21,7 @@ public class ItinerarioController {
 	@GetMapping(value = "{idlinha}")
 	public ResponseEntity<Response<Itinerario>> findById(@PathVariable("idlinha") String idlinha) {
 		Response<Itinerario> response = new Response<>();
-		Itinerario obj = itinerarioService.findById(idlinha);
+		Itinerario obj = itinerarioService.findByIdAndCreate(idlinha);
 		if (obj == null) {
 			response.getErrors().add("Register not found " + idlinha);
 			return ResponseEntity.badRequest().body(response);
