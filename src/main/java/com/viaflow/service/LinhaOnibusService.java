@@ -1,4 +1,4 @@
-package com.viaflow.integration;
+package com.viaflow.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;

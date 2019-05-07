@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viaflow.document.LinhaOnibus;
-import com.viaflow.integration.LinhaOnibusService;
 import com.viaflow.response.Response;
+import com.viaflow.service.LinhaOnibusService;
 
 @RestController
 @RequestMapping("/api/linha")
@@ -26,4 +26,9 @@ public class LinhaOnibusController {
 		response.setData(list);
 		return ResponseEntity.ok(response);
 	}
+	
+//	@PutMapping()
+//	public ResponseEntity<Response<List<LinhaOnibus>>> createOrUpdate(){
+//		
+//	}
 }
