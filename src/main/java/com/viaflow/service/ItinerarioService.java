@@ -53,13 +53,13 @@ public class ItinerarioService {
 			}
 		}
 		itinerario.setLocation(new GeoJsonMultiPoint(points));
-		if (itinerario.getLocation().equals(itinerarioFind.getLocation())
+		if (itinerarioFind != null && itinerario.getLocation().equals(itinerarioFind.getLocation())
 				&& itinerario.getIdlinha().equals(itinerarioFind.getIdlinha())
 				&& itinerario.getNome().equals(itinerarioFind.getNome())) {
 			return itinerarioFind;
+		}else if (itinerarioFind != null) {
+			itinerario.setId(itinerarioFind.getId());
 		}
-		itinerario.setId(itinerarioFind.getId());
-		//this.itinerarioRepository.deleteById(itinerarioFind.getId());
 		this.itinerarioRepository.save(itinerario);
 		return itinerario;
 	}
