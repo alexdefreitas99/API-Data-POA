@@ -1,5 +1,7 @@
 package com.viaflow.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,16 @@ public class ItinerarioController {
 		response.setData(obj);
 		return ResponseEntity.ok(response);
 	}
-	
+
+	@GetMapping(value = "{lng}/{lat}/{distance}")
+	public ResponseEntity<Response<List<Itinerario>>> findByLocationNear(@PathVariable("lng") Double lng,
+			@PathVariable("lat") Double lat, @PathVariable("distance") Double distance) {
+		Response<List<Itinerario>> response = new Response<>();
+		List<Itinerario> obj = itinerarioService.findByLocationNear(lat, lng, distance);
+		response.setData(obj);
+		return ResponseEntity.ok(response);
+	}
+
 //	@PostMapping(value = "{idlinha}")
 //	public ResponseEntity<Response<Itinerario>> createOrUpdate(@PathVariable("idlinha") String idlinha){
 //		Response<Itinerario> response = new Response<>();
