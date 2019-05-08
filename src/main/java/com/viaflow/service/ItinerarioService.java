@@ -51,8 +51,7 @@ public class ItinerarioService {
 					points.add(point);
 				} catch (NumberFormatException e) {
 				}
-			}			
-			System.out.println(points);
+			}
 			itinerario.setLocation(new GeoJsonMultiPoint(points));
 			this.itinerarioRepository.save(itinerario);
 			return itinerario;
