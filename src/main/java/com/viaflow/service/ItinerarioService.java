@@ -7,8 +7,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Point;
-import org.springframework.data.mongodb.core.geo.GeoJsonLineString;
-import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
+import org.springframework.data.mongodb.core.geo.GeoJsonMultiPoint;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -42,33 +41,19 @@ public class ItinerarioService {
 					.getAsJsonObject();
 			itinerario = gson.fromJson(itinerarioJson, Itinerario.class);
 			Set<String> chaves = itinerarioJson.keySet();
-			
-			
-			JsonObject jsonElementFixo = itinerarioJson.getAsJsonObject(Integer.toString(1));
-			
-			
-			
-			
-			
-			List<Point> points = new ArrayList<Point>(); 
-			
+			List<Point> points = new ArrayList<Point>();
 			for (String chave : chaves) {
 				try {
 					int val = 0;
 					val = Integer.parseInt(chave);
 					JsonObject jsonElement = itinerarioJson.getAsJsonObject(Integer.toString(val));
-					
-					points.add(new Point(jsonElement.get("lat").getAsDouble(), jsonElement.get("lng").getAsDouble()));
-					
-					//GeoJsonLineString lineString = new GeoJsonLineString(points)  
-					//itinerario.setLocation(new GeoJsonPoint();
-//					Coordenadas coor = new Coordenadas();
-//					coor.setLat(jsonElement.get("lat").getAsDouble());
-//					coor.setLng(jsonElement.get("lng").getAsDouble());
-//					itinerario.getCoordenadas().add(coor);
+					Point point = new Point(jsonElement.get("lat").getAsDouble(), jsonElement.get("lng").getAsDouble());
+					points.add(point);
 				} catch (NumberFormatException e) {
 				}
 			}			
+			System.out.println(points);
+			itinerario.setLocation(new GeoJsonMultiPoint(points));
 			this.itinerarioRepository.save(itinerario);
 			return itinerario;
 		}
