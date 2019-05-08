@@ -28,36 +28,40 @@ public class ItinerarioService {
 	private ItinerarioRepository itinerarioRepository;
 
 	public Itinerario findByIdAndCreate(String idlinha) {
+		Itinerario itinerarioFind = new Itinerario();
+		itinerarioFind = this.itinerarioRepository.findByidlinha(idlinha);
 		Itinerario itinerario = new Itinerario();
-		itinerario = this.itinerarioRepository.findByidlinha(idlinha);
-		if (itinerario == null) {
-			String url = "http://www.poatransporte.com.br/php/facades/process.php?a=il&p=" + idlinha;
-			Gson gson = new Gson();
-			HttpHeaders headers = new HttpHeaders();
-			headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-			HttpEntity<String> entity = new HttpEntity<String>(headers);
-			JsonObject itinerarioJson = new JsonParser()
-					.parse(new RestTemplate().exchange(url, HttpMethod.GET, entity, String.class).getBody())
-					.getAsJsonObject();
-			itinerario = gson.fromJson(itinerarioJson, Itinerario.class);
-			Set<String> chaves = itinerarioJson.keySet();
-			List<Point> points = new ArrayList<Point>();
-			for (String chave : chaves) {
-				try {
-					int val = 0;
-					val = Integer.parseInt(chave);
-					JsonObject jsonElement = itinerarioJson.getAsJsonObject(Integer.toString(val));
-					Point point = new Point(jsonElement.get("lat").getAsDouble(), jsonElement.get("lng").getAsDouble());
-					points.add(point);
-				} catch (NumberFormatException e) {
-				}
+		String url = "http://www.poatransporte.com.br/php/facades/process.php?a=il&p=" + idlinha;
+		Gson gson = new Gson();
+		HttpHeaders headers = new HttpHeaders();
+		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+		HttpEntity<String> entity = new HttpEntity<String>(headers);
+		JsonObject itinerarioJson = new JsonParser()
+				.parse(new RestTemplate().exchange(url, HttpMethod.GET, entity, String.class).getBody())
+				.getAsJsonObject();
+		itinerario = gson.fromJson(itinerarioJson, Itinerario.class);
+		Set<String> chaves = itinerarioJson.keySet();
+		List<Point> points = new ArrayList<Point>();
+		for (String chave : chaves) {
+			try {
+				int val = 0;
+				val = Integer.parseInt(chave);
+				JsonObject jsonElement = itinerarioJson.getAsJsonObject(Integer.toString(val));
+				Point point = new Point(jsonElement.get("lat").getAsDouble(), jsonElement.get("lng").getAsDouble());
+				points.add(point);
+			} catch (NumberFormatException e) {
 			}
-			itinerario.setLocation(new GeoJsonMultiPoint(points));
-			this.itinerarioRepository.save(itinerario);
-			return itinerario;
 		}
+		itinerario.setLocation(new GeoJsonMultiPoint(points));
+		if (itinerario.getLocation().equals(itinerarioFind.getLocation())
+				&& itinerario.getIdlinha().equals(itinerarioFind.getIdlinha())
+				&& itinerario.getNome().equals(itinerarioFind.getNome())) {
+			return itinerarioFind;
+		}
+		itinerario.setId(itinerarioFind.getId());
+		//this.itinerarioRepository.deleteById(itinerarioFind.getId());
+		this.itinerarioRepository.save(itinerario);
 		return itinerario;
-
 	}
 
 //	public Itinerario createOrUpdate(String idlinha) {
