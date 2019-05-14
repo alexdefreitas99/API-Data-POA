@@ -7,6 +7,8 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.GeoResults;
+import org.springframework.data.geo.Metrics;
 import org.springframework.data.geo.Point;
 import org.springframework.data.mongodb.core.geo.GeoJsonMultiPoint;
 import org.springframework.http.HttpEntity;
@@ -28,8 +30,7 @@ public class ItinerarioService {
 	@Autowired
 	private ItinerarioRepository itinerarioRepository;
 
-	public Itinerario findByIdAndCreate(String idlinha) {
-		
+	public Itinerario getByIdFromApiAndSave(String idlinha) {
 		Itinerario itinerario = new Itinerario();
 		String url = "http://www.poatransporte.com.br/php/facades/process.php?a=il&p=" + idlinha;
 		Gson gson = new Gson();
@@ -53,26 +54,35 @@ public class ItinerarioService {
 			}
 		}
 		itinerario.setLocation(new GeoJsonMultiPoint(points));
+		this.createOrUpdate(itinerario);
+		return itinerario;
+	}
+
+	public Itinerario createOrUpdate(Itinerario itinerario) {
 		Itinerario itinerarioFind = new Itinerario();
-		itinerarioFind = this.itinerarioRepository.findByidlinha(idlinha);
+		itinerarioFind = this.itinerarioRepository.findByidlinha(itinerario.getIdlinha());
 		if (itinerarioFind != null && itinerario.getLocation().equals(itinerarioFind.getLocation())
 				&& itinerario.getIdlinha().equals(itinerarioFind.getIdlinha())
 				&& itinerario.getNome().equals(itinerarioFind.getNome())) {
 			return itinerarioFind;
-		}else if (itinerarioFind != null) {
+		} else if (itinerarioFind != null) {
 			itinerario.setId(itinerarioFind.getId());
 		}
 		this.itinerarioRepository.save(itinerario);
 		return itinerario;
 	}
-	
-	public List<Itinerario> findByLocationNear(Double lat, Double lng, Double distance) {
-		return this.itinerarioRepository.findByLocationNear(new Point(lat, lng), new Distance(distance));
-	}
-	
-	
 
-//	public Itinerario createOrUpdate(String idlinha) {
-//		return this.itinerarioRepository.save(this.findById(idlinha));
-//	}
+	public Itinerario findByIdLinha(String idlinha) {
+		Itinerario itinerario = this.itinerarioRepository.findByidlinha(idlinha);
+		return itinerario;
+	}
+
+	public GeoResults<Itinerario> findByLocationNear(Double lat, Double lng, Double distance) {
+		return this.itinerarioRepository.findByLocationNear(new Point(lat, lng),
+				new Distance(distance, Metrics.KILOMETERS));
+	}
+
+	public void delete(String id) {
+		this.itinerarioRepository.deleteById(id);
+	}
 }
