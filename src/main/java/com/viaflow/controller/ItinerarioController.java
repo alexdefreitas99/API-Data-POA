@@ -1,11 +1,14 @@
 package com.viaflow.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.geo.GeoResults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import com.viaflow.service.ItinerarioService;
 
 @RestController
 @RequestMapping("/api/itinerario")
+@CrossOrigin(origins = "*")
 public class ItinerarioController {
 
 	@Autowired
@@ -36,6 +40,18 @@ public class ItinerarioController {
 		response.setData(obj);
 		return ResponseEntity.ok(response);
 	}
+	
+	@GetMapping(value = "/id/{id}")
+	public ResponseEntity<Response<Itinerario>> findById(@PathVariable("id") String id) {
+		Response<Itinerario> response = new Response<>();
+		Itinerario obj = this.itinerarioService.findById(id);
+		if (obj == null) {
+			response.getErrors().add("Register not found " + obj);
+			return ResponseEntity.badRequest().body(response);
+		}
+		response.setData(obj);
+		return ResponseEntity.ok(response);
+	}
 
 	@PostMapping
 	public ResponseEntity<Response<Itinerario>> create(HttpServletRequest req, @RequestBody Itinerario object,
@@ -47,10 +63,10 @@ public class ItinerarioController {
 	}
 
 	@GetMapping(value = "{lng}/{lat}/{distance}")
-	public ResponseEntity<Response<GeoResults<Itinerario>>> findByLocationNear(@PathVariable("lng") Double lng,
+	public ResponseEntity<Response<List<Itinerario>>> findByLocationNear(@PathVariable("lng") Double lng,
 			@PathVariable("lat") Double lat, @PathVariable("distance") Double distance) {
-		Response<GeoResults<Itinerario>> response = new Response<>();
-		GeoResults<Itinerario> obj = itinerarioService.findByLocationNear(lat, lng, distance);
+		Response<List<Itinerario>> response = new Response<>();
+		List<Itinerario> obj = itinerarioService.findByLocationNear(lat, lng, distance);
 		response.setData(obj);
 		return ResponseEntity.ok(response);
 	}
