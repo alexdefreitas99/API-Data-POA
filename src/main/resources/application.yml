@@ -1,5 +1,0 @@
-spring:
-      data:
-          uri: mongodb+srv://viaflow:viaflow123@cluster0-vkfum.mongodb.net/integration?retryWrites=true
-      rest:
-          base-path: /api
