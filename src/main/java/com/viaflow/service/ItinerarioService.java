@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -35,7 +34,7 @@ public class ItinerarioService {
         JsonObject itinerarioJson = new JsonParser()
                 .parse(Objects.requireNonNull(new RestTemplate().exchange(url, HttpMethod.GET, entity, String.class).getBody()))
                 .getAsJsonObject();
-		Itinerario itinerario = gson.fromJson(itinerarioJson, Itinerario.class);
+        Itinerario itinerario = gson.fromJson(itinerarioJson, Itinerario.class);
         Set<String> chaves = itinerarioJson.keySet();
         List<Point> points = new ArrayList<>();
         for (String chave : chaves) {
@@ -54,7 +53,7 @@ public class ItinerarioService {
     }
 
     public Itinerario createOrUpdate(Itinerario itinerario) {
-		Itinerario itinerarioFind = this.itinerarioRepository.findByidlinha(itinerario.getIdlinha());
+        Itinerario itinerarioFind = this.itinerarioRepository.findByidlinha(itinerario.getIdlinha());
         if (itinerarioFind != null && itinerario.getLocation().equals(itinerarioFind.getLocation())
                 && itinerario.getIdlinha().equals(itinerarioFind.getIdlinha())
                 && itinerario.getNome().equals(itinerarioFind.getNome())) {
@@ -76,9 +75,6 @@ public class ItinerarioService {
     }
 
     public Itinerario findById(String id) {
-    	if(this.itinerarioRepository.findById(id).isPresent()){
-			return this.itinerarioRepository.findById(id).get();
-		}
-    	return null;
+        return this.itinerarioRepository.findById(id).get();
     }
 }
