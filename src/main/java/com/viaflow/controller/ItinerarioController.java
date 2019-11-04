@@ -53,10 +53,10 @@ public class ItinerarioController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Response<Itinerario>> create(HttpServletRequest req, @RequestBody Itinerario object,
+	public ResponseEntity<Response<Itinerario>> create(HttpServletRequest req, @RequestBody Itinerario itinerario,
 			BindingResult result) {
 		Response<Itinerario> response = new Response<>();
-		Itinerario persistedObject = itinerarioService.createOrUpdate(object);
+		Itinerario persistedObject = itinerarioService.createOrUpdate(itinerario);
 		response.setData(persistedObject);
 		return ResponseEntity.ok(response);
 	}
